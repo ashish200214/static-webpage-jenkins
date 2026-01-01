@@ -1,0 +1,9 @@
+zip staticpage.zip ./*.html
+sudo scp -i /var/lib/jenkins/.ssh/<keypair>.pem -o StrictHostKeyChecking=no staticpage.zip  ubuntu@54.226.47.55:.
+sudo ssh -i /var/lib/jenkins/.ssh/<keypair>.pem -o StrictHostKeyChecking=no ubuntu@54.226.47.55 <<EOF
+cd /var/www/html/
+
+sudo rm -rf *
+sudo unzip /home/ubuntu/staticpage.zip
+curl localhost:80
+EOF
