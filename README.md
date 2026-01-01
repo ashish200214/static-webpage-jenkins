@@ -20,68 +20,53 @@ This project demonstrates a simple and practical CI/CD pipeline using **Jenkins*
 
 1. **Code Push to GitHub**
    Any change pushed to a specific branch in the GitHub repository triggers a webhook event.
+   
 
-2. **GitHub Webhook → Jenkins**
+3. **GitHub Webhook → Jenkins**
    The webhook notifies the Jenkins server whenever changes are made to the configured branch.
 
-3. **Jenkins Job Execution**
+4. **Jenkins Job Execution**
    After receiving the webhook:
+    <img width="1920" height="1008" alt="Screenshot 2026-01-01 184600" src="https://github.com/user-attachments/assets/ceaea144-b016-4be2-bbb3-3e754c9cf12f" />
 
    * Jenkins clones the latest version of the repository.
    * The build process starts automatically.
+     <img width="960" height="504" alt="image" src="https://github.com/user-attachments/assets/46ebca58-6105-4ba2-aa2c-13c997b75cdb" />
+    <img width="960" height="504" alt="image" src="https://github.com/user-attachments/assets/97398824-a211-44f8-a8c0-d3d43025461c" />
 
-4. **Build Step (Packaging)**
+
+
+5. **Build Step (Packaging)**
 
    * Jenkins searches for all files ending with `.html`.
    * These files are compressed into a single ZIP file.
+  
 
-5. **Transfer to Live Server**
+zip staticpage.zip ./*.html
+sudo scp -i /var/lib/jenkins/.ssh/<keypair>.pem -o StrictHostKeyChecking=no staticpage.zip  ubuntu@54.226.47.55:.
+sudo ssh -i /var/lib/jenkins/.ssh/<keypair>.pem -o StrictHostKeyChecking=no ubuntu@54.226.47.55 <<EOF
+cd /var/www/html/
+
+sudo rm -rf *
+sudo unzip /home/ubuntu/staticpage.zip
+curl localhost:80
+EOF
+
+
+6. **Transfer to Live Server**
 
    * Jenkins securely copies (`scp`) the ZIP file to the live server using SSH authentication.
 
-6. **Deployment on Live Server**
+7. **Deployment on Live Server**
 
    * Jenkins connects to the live server via SSH.
    * Existing files in `/var/www/html` are removed.
    * The ZIP file is extracted in `/var/www/html`.
 
-7. **Website Update**
+8. **Website Update**
 
    * The live server immediately serves the updated HTML files.
    * No manual intervention is required.
+  <img width="1920" height="1008" alt="Screenshot 2026-01-01 184334" src="https://github.com/user-attachments/assets/001749a3-16b2-4f72-9cd2-a252babadb98" />
 
----
 
-### Key Features
-
-* Automated deployment using **GitHub Webhooks**
-* Secure file transfer using **SCP and SSH**
-* Clean separation between **CI server** and **production server**
-* Real-time website updates on every code push
-
----
-
-### Use Case
-
-This setup is ideal for:
-
-* Static websites
-* Learning CI/CD fundamentals
-* Understanding real-world Jenkins automation
-* Practicing server-to-server deployments
-
----
-
-### Summary
-
-This pipeline ensures that every change pushed to GitHub is automatically built and deployed to the live server, making the deployment process fast, consistent, and reliable.
-
----
-
-If you want, I can:
-
-* Convert this into a **diagram**
-* Add **Jenkinsfile snippet**
-* Make it more **casual** or more **enterprise-style**
-
-Just tell me 👍
